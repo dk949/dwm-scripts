@@ -38,6 +38,20 @@ getVol(){
     [[ "$(amixer sget 'Master' | tail -n 1 | awk '{print $6}')" == "[off]" ]] && echo -e "[off]" || echo "$(amixer sget 'Master' | tail -n 1 | awk '{print $4}')"
 }
 
+getBat(){
+    BAT_STAT="$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | awk '/state/ {print $2}')"
+    BAT_CAP="$(cat /sys/class/power_supply/BAT0/capacity)"
+    if [[ "$BAT_STAT" == "charging" ]]
+    then
+        echo +"$BAT_CAP"
+    elif [[ "$BAT_STAT" == "discharging" ]]
+    then
+        echo -"$BAT_CAP"
+    else
+        echo "$BAT_CAP"
+    fi
+}
+
 # Remember to patch in color
 status() {
     echo RAM: "$(free -m| awk '/^Mem/ {print $3"M/"$2"M"}')"
@@ -46,7 +60,7 @@ status() {
     echo $delim
     echo Master: "$(getVol)"
     echo $delim
-    echo BAT0: $(cat /sys/class/power_supply/BAT0/capacity)%
+    echo BAT0: $(getBat)%
     echo $delim
     date '+%F %R'
 }
