@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+/usr/local/bin/wpa_supplicant "$@" > /dev/null
