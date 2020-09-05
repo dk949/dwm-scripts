@@ -36,7 +36,7 @@ delim="|"
 
 
 getVol(){
-    [ "$(amixer sget 'Master' | tail -n 1 | awk '{print $6}')" = "[off]" ] && echo "[off]" || echo "$(amixer sget 'Master' | tail -n 1 | awk '{print $4}')"
+    [ "$(amixer sget 'Master' | tail -n 1 | awk '{print $6}')" = "[off]" ] && echo "[off]" || amixer sget 'Master' | tail -n 1 | awk '{print $4}'
 }
 
 getBat(){
