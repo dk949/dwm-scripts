@@ -1,3 +1,0 @@
-#!/bin/bash
-twmnc -t 'Power supply' -c 'Attached' -d 400 && notify-lock
-/bin/bash /home/davidk/bin/refbar
