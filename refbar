@@ -1,2 +1,2 @@
-#!/bin/bash
-kill $(pgrep -P $(pgrep statusbar))
+#!/bin/sh
+kill "$(pgrep -P "$(pgrep statusbar)")"

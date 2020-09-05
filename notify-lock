@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 touch /home/davidk/.config/twmn/lock
 sleep 0.5
 rm /home/davidk/.config/twmn/lock

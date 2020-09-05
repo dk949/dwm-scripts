@@ -1,5 +1,5 @@
 #!/bin/sh
 CURRENT=$PWD
 cd ~/bin
-rm $(ls $CURRENT | awk '!/README.md|install|\.git/')
-ln -s $(ls $CURRENT/* | awk '!/README.md|install|\.git/') .
+rm $(ls $CURRENT | awk '!/README.md|install|\.git|TODO/') 2> /dev/null
+ln -s $(ls $CURRENT/* | awk '!/README.md|install|\.git|TODO/') .
