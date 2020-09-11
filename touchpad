@@ -1,27 +1,25 @@
-ID=$(xinput | grep "Touchpad")
-ID=${ID:50}
-ID=${ID::${#ID}-22}
+ID=$(xinput | awk '/Touchpad/ {print $6}' | cut -d"=" -f 2)
 
-xinput --set-prop "$ID" 'libinput Tapping Enabled' 		1
-xinput --set-prop "$ID" 'libinput Tapping Drag Enabled'		1
+xinput set-prop "$ID" 'libinput Tapping Enabled' 		1
+xinput set-prop "$ID" 'libinput Tapping Drag Enabled'		1
 # shellcheck disable=SC2086
-xinput --set-prop "$ID" 'libinput Tapping Drag Lock Enabled'	1
-#xinput --set-prop $ID 'libinput Tapping Button Mapping Enabled'	1 # This causes a crash
-xinput --set-prop "$ID" 'libinput Natural Scrolling Enabled' 	1
-xinput --set-prop "$ID" 'libinput Disable While Typing Enabled'	1
+xinput set-prop "$ID" 'libinput Tapping Drag Lock Enabled'	1
+#xinput set-prop $ID 'libinput Tapping Button Mapping Enabled'	1 # This causes a crash
+xinput set-prop "$ID" 'libinput Natural Scrolling Enabled' 	1
+xinput set-prop "$ID" 'libinput Disable While Typing Enabled'	1
 
 
 #libinput Scroll Methods Available (288):	1, 1, 0
 #libinput Scroll Method Enabled (289):	1, 0, 0
 #libinput Click Methods Available (316):	1, 1
 #libinput Click Method Enabled (317):	1, 0
-xinput --set-prop "$ID" 'libinput Middle Emulation Enabled'	0
+xinput set-prop "$ID" 'libinput Middle Emulation Enabled'	0
 #libinput Accel Speed (297):	0.000000
 #libinput Click Method Enabled (317):	1, 0
-xinput --set-prop "$ID" 'libinput Left Handed Enabled'		0
+xinput set-prop "$ID" 'libinput Left Handed Enabled'		0
 #libinput Send Events Modes Available (271):	1, 1
 #libinput Send Events Mode Enabled (272):	0, 0
 #Device Node (274):	"/dev/input/event17"
 #Device Product ID (275):	1739, 52656
 #libinput Drag Lock Buttons (304):	<no items>
-xinput --set-prop "$ID" 'libinput Horizontal Scroll Enabled' 	1
+xinput set-prop "$ID" 'libinput Horizontal Scroll Enabled' 	1
