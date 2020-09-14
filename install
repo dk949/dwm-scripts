@@ -1,5 +1,8 @@
 #!/bin/sh
 CURRENT=$PWD
-cd ~/bin
-rm $(ls $CURRENT | awk '!/README.md|install|\.git|TODO/') 2> /dev/null
-ln -s $(ls $CURRENT/* | awk '!/README.md|install|\.git|TODO/') .
+cd ~/bin || exit 1
+
+find "$CURRENT" -maxdepth 1 -type f | rev | cut -d'/' -f 1 | rev  | awk '!/README.md|install|\.git|TODO/' | xargs rm 2> /dev/null
+for i in $(find "$CURRENT" -maxdepth 1 -type f | awk '!/README.md|install|\.git|TODO/'); do
+    ln -s "$i" .;
+done
