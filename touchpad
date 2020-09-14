@@ -1,3 +1,4 @@
+#!/bin/sh
 ID=$(xinput | awk '/Touchpad/ {print $6}' | cut -d"=" -f 2)
 
 xinput set-prop "$ID" 'libinput Tapping Enabled' 		1

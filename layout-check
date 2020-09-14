@@ -20,7 +20,7 @@ case "$1" in
         ;;
 esac
 
-if command -v figlet &> /dev/null ; then
+if command -v figlet 1,2> /dev/null ; then
     CMD=figlet
 else
     CMD="echo"
@@ -30,9 +30,9 @@ if [ -n "$TERM" ]; then
     T="$TERM"
 elif [ -n "$TERMINAL" ]; then
     T="$TERMINAL"
-elif command -v  xterm &> /dev/null; then
+elif command -v  xterm 1,2> /dev/null; then
     T="xterm"
-elif command -v  urxvt &> /dev/null; then
+elif command -v  urxvt 1,2> /dev/null; then
     T="urxvt"
 else
     echo "Could not detect Terminal, try exporting TERM or TERMINAL env variables"
@@ -45,7 +45,7 @@ done
 
 sleep 0.5
 
-for i in $(ls /dev/pts); do
+for i in /dev/pts*; do
     case "$i" in
         *[0-9]*)
             out "$i" clear
