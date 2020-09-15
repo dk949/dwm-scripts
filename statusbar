@@ -61,7 +61,7 @@ getBat(){
 status() {
     echo RAM: "$(free -m| awk '/^Mem/ {print $3"M/"$2"M"}')"
     echo $delim
-    sensors | awk '/^Package/ {print $4 "°C"}'|cut -c2-
+    sensors | awk '/^Package/ {print $4}'|cut -c2-
     echo $delim
     echo Master: "$(getVol)"
     echo $delim
