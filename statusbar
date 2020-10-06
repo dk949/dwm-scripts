@@ -73,7 +73,17 @@ getUpdates() {
     echo "$UPDATE_TEXT"
 }
 
+getWebcam() {
+    if [ $(sudo lsmod | grep -E "^uvcvideo" | awk '{print $3}') -eq 0 ]; then
+        echo "OFF"
+    else
+        echo "ON"
+    fi
+}
+
 status() {
+    echo CAM: "$(getWebcam)"
+    echo $delim
     echo PAC: "$(pacman -Q | wc -l)"
     echo $delim
     getUpdates
