@@ -2,15 +2,15 @@
 Scripts to be used with my build of [dwm](https://github.com/dk949/dwm)
 
 ### List of Scripts and what they do
-* cputmp - returns cpu temperature. Is no longer used as part od the dwm build
-* notify-lock - requires twmn (not really just that the folder ~/.config/twmn exists). Creates a lock file and deletes it after a certain time. While this file is created, no notifications can be sent. Prevents notifications from being spammed and the user having to wait for then to stop
+* cputmp - returns cpu temperature. Is used by the statusbar
+* layout-check - Takes a number as a parameter and spawns that many terminals the prints a number to each one to distinguish them. Requires out from [shellutils](https://github.com/dk949/shellutils)
+* notify-lock - requires twmn (not really just that the folder ~/.config/twmn exists). Creates a lock file and deletes it after a certain time. While this file is created, no notifications can be sent. Prevents notifications from being spammed and the user having to wait for then to stop.
 * picom-end - requires picom. Kills the picom process
 * picom-start - starts the picom process in the background
 * refbar - refreshes the startusbar by killing the sleep process it spawns
 * statusbar - pulls in and formats some system information. Then with a certain interval passes it to xsetroot (which is how the status bar is set in dwm).
 * touchpad - sets some touchpad properties. The comented out properties were impossible to set for my touchpad.
 * turnoff - just sudo poweroff. For dwm to call with a shortcut.
-* wpa_supplicant_wrapper - On my system I have moved wpa_supplicant from /usr/bin to usr/local/bin. There I created this wrapper which sends stdout from wpa_supplicant to /dev/null. then the wrapper is symlinked back to /usr/bin/wpa_supplicant. If there is a better way to silence this thing on boot, i haven't found it yet.
 
 
 ### Installation
