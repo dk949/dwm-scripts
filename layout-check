@@ -21,7 +21,7 @@ case "$1" in
 esac
 
 if command -v figlet 1,2> /dev/null ; then
-    CMD=figlet
+    CMD="figlet"
 else
     CMD="echo"
 fi
