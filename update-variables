@@ -1,0 +1,25 @@
+#!/bin/sh
+# Checking for updates
+UPDATES=$(checkupdates)
+WATCHLIST="blender |python "
+
+if [ ${#UPDATES} -eq 0 ]; then
+    NUM_UPDATES=0
+else
+    NUM_UPDATES=$(echo "$UPDATES" | wc -l)
+
+fi
+
+export NUM_UPDATES
+
+# Go through available updates and remove anything not on the watch list
+IMPORTANT_UPDATES=$(echo "$UPDATES" | sed -r "/$WATCHLIST/!d" | wc -l)
+export IMPORTANT_UPDATES
+
+# Remove anything that is not a kernel (or firmware) update
+KERNEL_UPDATES=$(echo "$UPDATES" | sed -r "/linux/!d" | wc -l)
+export KERNEL_UPDATES
+
+
+NUMPACKAGES="$(pacman -Q | wc -l)"
+export NUMPACKAGES
