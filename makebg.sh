@@ -4,6 +4,6 @@ if test "$#" -ne 1; then
     exit 1
 fi
 
-feh --bg-fill "$1" &&
-    mv "$HOME/.fegbh" "$XDG_CACHE_HOME/fehbg" ||
-    echo "Something went wrong"
+CACHE_FILE_NAME=fehbg
+
+feh --bg-fill "$1" && mv "$HOME/.$CACHE_FILE_NAME" "$XDG_CACHE_HOME/$CACHE_FILE_NAME" || echo "Something went wrong"
