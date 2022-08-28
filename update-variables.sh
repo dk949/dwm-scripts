@@ -1,12 +1,17 @@
 #!/bin/sh
 # Checking for updates
 
-p0uQPNBSWyPymI2MJvUAGTnlGljKd6KG() {
+if [ $# -ne 1 ]; then
+    echo "Usage: $(basename "$0") TIME"
+    exit 1
+fi
+
+updateFunc() {
     PACVARS_DIR="$XDG_CACHE_HOME/pacvars"
     [ -d "$PACVARS_DIR" ] || mkdir "$PACVARS_DIR"
 
     UPDATES=$(checkupdates)
-    WATCHLIST="python "
+    WATCHLIST="gcc clang "
 
     if [ ${#UPDATES} -eq 0 ]; then
         NUM_UPDATES=0
@@ -65,6 +70,6 @@ p0uQPNBSWyPymI2MJvUAGTnlGljKd6KG() {
 }
 
 while true; do
-    p0uQPNBSWyPymI2MJvUAGTnlGljKd6KG
-    sleep 18000
+    updateFunc
+    sleep "$1"
 done &
