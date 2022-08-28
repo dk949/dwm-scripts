@@ -6,4 +6,6 @@ fi
 
 CACHE_FILE_NAME=fehbg
 
-feh --bg-fill "$1" && mv "$HOME/.$CACHE_FILE_NAME" "$XDG_CACHE_HOME/$CACHE_FILE_NAME" || echo "Something went wrong"
+if ! feh --bg-fill "$1" && mv "$HOME/.$CACHE_FILE_NAME" "$XDG_CACHE_HOME/$CACHE_FILE_NAME"; then
+    echo "makebg failed for unknown reason"
+fi
