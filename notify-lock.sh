@@ -1,4 +1,0 @@
-#!/bin/sh
-touch "$HOME"/.config/twmn/lock
-sleep 0.5
-rm "$HOME"/.config/twmn/lock
