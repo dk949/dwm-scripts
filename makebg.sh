@@ -4,8 +4,10 @@ if test "$#" -ne 1; then
     exit 1
 fi
 
-CACHE_FILE_NAME=.fehbg
-
-if ! feh --bg-fill "$1" && mv "$HOME/.$CACHE_FILE_NAME" "$XDG_CACHE_HOME/$CACHE_FILE_NAME"; then
-    echo "makebg failed for unknown reason"
+feh --bg-fill "$1"
+if [ -f ~/.fehbg ]; then
+    mv ~/.fehbg "$XDG_CACHE_HOME/.fehbg"
+else
+    echo "Failed to move fehbg file"
+    exit 1
 fi
