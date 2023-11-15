@@ -1,11 +1,8 @@
 #include "common.h"
 
 #include <libgen.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <unistd.h>
 
 #ifndef BATNOTIFY_VERSION
 #    define BATNOTIFY_VERSION "UNKNOWN"
@@ -27,8 +24,6 @@ static char *progname;
 
 static void readArgs(int argc, char **argv);
 static void mainLoop(void);
-static long getInt(char const *str, char const *msg);
-static double getFloat(char const *str, char const *msg);
 static void notifySend(char *urgency, char *icon, char *head, char *body);
 
 int main(int argc, char **argv) {
@@ -116,36 +111,7 @@ static void notifySend(char *urgency, char *icon, char *head, char *body) {
     else
         args[ICON - 1] = NULL;
 
-    switch (vfork()) {
-        case -1: DIE("Failed to fork the process: %s\n", strerror(errno));
-        case 0: execvp("notify-send", args); DIE("Failed to run notify-send: %s\n", strerror(errno));
-        default: {
-            int status;
-            wait(&status);
-            if (WIFEXITED(status)) {
-                if ((status = WEXITSTATUS(status))) WARN("Child process failed with status %d\n", status);
-            } else if (WIFSIGNALED(status))
-                WARN("Child process was killed with signal %d\n", WTERMSIG(status));
-            else if (WIFSTOPPED(status))
-                WARN("Child process was stopped with signal %d\n", WSTOPSIG(status));
-            else
-                DIE("Child process exited unexpectedly: %s\n", strerror(errno));
-        }
-    }
-}
-
-static long getInt(char const *str, char const *msg) {
-    char *end;
-    long ret = strtol(str, &end, 0);
-    if (*end) DIE("%s: `%s'\n", msg, str);
-    return ret;
-}
-
-static double getFloat(char const *str, char const *msg) {
-    char *end;
-    double ret = strtod(str, &end);
-    if (*end) DIE("%s: `%s'\n", msg, str);
-    return ret;
+    (void)runCmd("notify-send", args);
 }
 
 /****************.
