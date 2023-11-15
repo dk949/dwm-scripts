@@ -1,21 +1,12 @@
-#include <errno.h>
+#include "common.h"
+
 #include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <time.h>
 #include <unistd.h>
 
-#define DIE(...)                      \
-    do {                              \
-        fprintf(stderr, __VA_ARGS__); \
-        exit(1);                      \
-    } while (0)
-#define WARN(...)                              \
-    do                                         \
-        fprintf(stderr, "WARN: " __VA_ARGS__); \
-    while (0)
 #ifndef BATNOTIFY_VERSION
 #    define BATNOTIFY_VERSION "UNKNOWN"
 #endif
@@ -39,7 +30,6 @@ static void mainLoop(void);
 static long getInt(char const *str, char const *msg);
 static double getFloat(char const *str, char const *msg);
 static void notifySend(char *urgency, char *icon, char *head, char *body);
-static void noInteruptSleep(struct timespec ts);
 
 int main(int argc, char **argv) {
     readArgs(argc, argv);
@@ -107,12 +97,6 @@ static void mainLoop(void) {
 |      Utils     |
 `****************/
 
-static void noInteruptSleep(struct timespec ts) {
-    static struct timespec remain;
-    remain = ts;
-    while (nanosleep(&remain, &remain) == -1 && errno == EINTR) { }
-}
-
 static void notifySend(char *urgency, char *icon, char *head, char *body) {
     enum { PROGNAME = 2, URGENCY = 4, HEAD = 5, BODY = 6, ICON = 8, END };
 
@@ -123,20 +107,18 @@ static void notifySend(char *urgency, char *icon, char *head, char *body) {
         [ICON - 1] = "-i",
         [END] = NULL,
     };
-    switch (fork()) {
+    args[PROGNAME] = progname;
+    args[URGENCY] = urgency;
+    args[HEAD] = head;
+    args[BODY] = body;
+    if (icon)
+        args[ICON] = icon;
+    else
+        args[ICON - 1] = NULL;
+
+    switch (vfork()) {
         case -1: DIE("Failed to fork the process: %s\n", strerror(errno));
-        case 0:
-            args[PROGNAME] = progname;
-            args[URGENCY] = urgency;
-            args[HEAD] = head;
-            args[BODY] = body;
-            if (icon) {
-                args[ICON - 1] = "-i";
-                args[ICON] = icon;
-            } else
-                args[ICON - 1] = NULL;
-            execvp("notify-send", args);
-            DIE("Failed to run notify-send: %s\n", strerror(errno));
+        case 0: execvp("notify-send", args); DIE("Failed to run notify-send: %s\n", strerror(errno));
         default: {
             int status;
             wait(&status);
