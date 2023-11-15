@@ -27,6 +27,7 @@ static void mainLoop(void);
 static void notifySend(char *urgency, char *icon, char *head, char *body);
 
 int main(int argc, char **argv) {
+    nice(19);
     readArgs(argc, argv);
     mainLoop();
 }
