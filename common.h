@@ -65,5 +65,9 @@ static int runCmd(char const *pname, char *const args[]) {
     }
 }
 
+// Just system for now, but might change later
+static int runShell(char const *command) {
+    return system(command);
+}
 
 #endif  // COMMON_H
