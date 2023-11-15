@@ -194,29 +194,29 @@ static void readArgs(int argc, char **argv) {
     progname = basename(argv[0]);
     if (argc <= 1) help(1);
     for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-u") || !strcmp(argv[i], "--urgent")) {
+        if (eq(argv[i], "-u") || eq(argv[i], "--urgent")) {
             if (++i >= argc) DIE("Expected number after %s\n", argv[i - 1]);
             urgent_level = getInt(argv[i], "Invalid integer");
-        } else if (!strcmp(argv[i], "-w") || !strcmp(argv[i], "--warning")) {
+        } else if (eq(argv[i], "-w") || eq(argv[i], "--warning")) {
             if (++i >= argc) DIE("Expected number after %s\n", argv[i - 1]);
             warning_level = getInt(argv[i], "Invalid integer");
-        } else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--interval")) {
+        } else if (eq(argv[i], "-i") || eq(argv[i], "--interval")) {
             if (++i >= argc) DIE("Expected number after %s\n", argv[i - 1]);
             double t = getFloat(argv[i], "Invalid decimal");
             interval.tv_sec = t;
             interval.tv_nsec = 1e9 * (t - (double)interval.tv_sec);
-        } else if (!strcmp(argv[i], "--no-icons")) {
+        } else if (eq(argv[i], "--no-icons")) {
             urgent_icon = NULL;
             warning_icon = NULL;
-        } else if (!strcmp(argv[i], "--urgent-icon")) {
+        } else if (eq(argv[i], "--urgent-icon")) {
             if (++i >= argc) DIE("Expected path or name after %s\n", argv[i - 1]);
             urgent_icon = argv[i];
-        } else if (!strcmp(argv[i], "--warning-icon")) {
+        } else if (eq(argv[i], "--warning-icon")) {
             if (++i >= argc) DIE("Expected path or name after %s\n", argv[i - 1]);
             warning_icon = argv[i];
-        } else if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version"))
+        } else if (eq(argv[i], "-v") || eq(argv[i], "--version"))
             version();
-        else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
+        else if (eq(argv[i], "-h") || eq(argv[i], "--help"))
             help(0);
         else {
             if (BAT_PATH) DIE("Only one battery path can be specified\n");
