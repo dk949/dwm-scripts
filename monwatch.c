@@ -32,7 +32,7 @@ static void mainLoop(void);
 static void updateAllStates(void);
 
 int main(int argc, char **argv) {
-    if (nice(19) < 0) WARN("Could not set niceness: %s\n", strerror(errno));
+    setNice(19);
     readArgs(argc, argv);
     mainLoop();
 }

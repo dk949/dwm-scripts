@@ -70,4 +70,8 @@ static int runShell(char const *command) {
     return system(command);
 }
 
+static void setNice(int n) {
+    if (nice(n) < 0) WARN("Failed to set niceness to %d: %s\n", n, strerror(errno));
+}
+
 #endif  // COMMON_H
