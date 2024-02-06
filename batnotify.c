@@ -9,6 +9,7 @@
 #endif
 
 static char const *BAT_PATH = NULL;
+static char const *bat_status_path = NULL;
 static int urgent_level = 5;
 static int warning_level = -1;
 static int urgent_sent = 0, warning_sent = 0;
@@ -48,13 +49,40 @@ static int getBatteryLevel(void) {
     fclose(bat);
 
     if (errno) DIE("An error occured when reading capacity file `%s': %s\n", BAT_PATH, strerror(errno));
-    if (read == 0 || read >= SZ) DIE("Unexpected number of characters read from buffer file (%d)\n", SZ - 1);
+    if (read == 0 || read >= SZ)
+        DIE("Unexpected number of characters read from capacity file %s (read %ld bytes, bufsize %d)\n", BAT_PATH, read, SZ);
 
     buf[read] = 0;
     while (read-- > 0)
         if (buf[read] == '\n') buf[read] = 0;
 
     return getInt(buf, "Value obtained from capacity file is not an integer\n");
+#undef SZ
+}
+
+static bool isCharging(void) {
+#define SZ 16
+    static char buf[SZ];
+
+    if (!bat_status_path) return false;
+    FILE *status = fopen(bat_status_path, "r");
+    if (!status) DIE("Could not open status file `%s': %s\n", bat_status_path, strerror(errno));
+    errno = 0;
+    size_t read = fread(buf, 1, SZ - 1, status) + 1;
+    fclose(status);
+
+    if (errno) DIE("An error occured when reading status file `%s': %s\n", bat_status_path, strerror(errno));
+    if (read == 0 || read >= SZ)
+        DIE("Unexpected number of characters read from status file %s (read %ld bytes, bufsize %d)\n",
+            bat_status_path,
+            read,
+            SZ);
+    buf[read] = 0;
+    while (read-- > 0)
+        if (buf[read] == '\n') buf[read] = 0;
+    if (!strcmp(buf, "Discharging")) return false;
+    if (!strcmp(buf, "Charging")) return true;
+    DIE("Unexpected value read from status file %s\n", buf);
 #undef SZ
 }
 
@@ -77,13 +105,15 @@ static void clearAll(void) {
 
 static void mainLoop(void) {
     while (1) {
-        long l = getBatteryLevel();
-        if (l <= urgent_level)
-            urgentSend();
-        else if (l <= warning_level)
-            warningSend();
-        else
-            clearAll();
+        if (!isCharging()) {
+            long l = getBatteryLevel();
+            if (l <= urgent_level)
+                urgentSend();
+            else if (l <= warning_level)
+                warningSend();
+            else
+                clearAll();
+        }
 
         noInteruptSleep(interval);
     }
@@ -125,6 +155,10 @@ static void help(int code) {
         "\n"
         "     BAT_PATH is the path to the battery capacity file.\n"
         "     E.g. `/sys/class/power_supply/BAT0/capacity'\n"
+        "\n"
+        "    -s, --status PATH         Path to the battery status file\n"
+        "                              (E.g. /sys/class/power_supply/BAT0/status)\n"
+        "                              Default: None, status is not used.\n"
         "\n"
         "    -u, --urgent N            When should the urgent notification be sent.\n"
         "                              Set to -1 to turn off. Default: %d%%.\n"
@@ -175,6 +209,9 @@ static void readArgs(int argc, char **argv) {
         } else if (eq(argv[i], "--no-icons")) {
             urgent_icon = NULL;
             warning_icon = NULL;
+        } else if (eq(argv[i], "-s") || eq(argv[i], "--status")) {
+            if (++i >= argc) DIE("Expected path after %s\n", argv[i - 1]);
+            bat_status_path = argv[i];
         } else if (eq(argv[i], "--urgent-icon")) {
             if (++i >= argc) DIE("Expected path or name after %s\n", argv[i - 1]);
             urgent_icon = argv[i];
