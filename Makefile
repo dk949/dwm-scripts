@@ -9,7 +9,7 @@ batnotify: batnotify.c common.h config.mk
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 monwatch: monwatch.c common.h config.mk
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) `pkg-config --cflags --libs xcb xcb-randr` $< -o $@
+	$(CC) `pkg-config --cflags --libs xcb xcb-randr` $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin/
