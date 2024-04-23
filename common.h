@@ -74,4 +74,13 @@ static void setNice(int n) {
     if (nice(n) < 0) WARN("Failed to set niceness to %d: %s\n", n, strerror(errno));
 }
 
+static char *catAlloc(char *old, char const *new) {
+    size_t old_size = old ? strlen(old) : 0;
+    size_t new_size = strlen(new);
+    char *out = realloc(old, old_size + new_size + 1);
+    strcpy(out + old_size, new);
+    return out;
+}
+
+
 #endif  // COMMON_H
