@@ -48,7 +48,7 @@ static double getFloat(char const *str, char const *msg) {
 static int runCmd(char const *pname, char *const args[]) {
     switch (vfork()) {
         case -1: DIE("Failed to fork the process: %s\n", strerror(errno));
-        case 0: execvp(pname, args); DIE("Failed to run notify-send: %s\n", strerror(errno));
+        case 0: execvp(pname, args); DIE("Failed to run %s: %s\n", pname, strerror(errno));
         default: {
             int status;
             wait(&status);
