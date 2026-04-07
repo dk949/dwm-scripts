@@ -47,26 +47,6 @@ updateFunc() {
     mv /tmp/tmp_pac "$HOME"/install/packages_foreign.txt
     cd "$HOME"/install && git add packages_foreign.txt
     cd || exit 1
-
-    pip list | awk '{print $1}' | tail -n+3 > "$HOME"/install/packages_pip.txt
-    sort < "$HOME"/install/packages_pip.txt | uniq > /tmp/tmp_pac
-    mv /tmp/tmp_pac "$HOME"/install/packages_pip.txt
-    cd "$HOME"/install && git add packages_pip.txt
-    cd || exit 1
-
-
-    printf "" > "$HOME"/install/packages_git.txt
-    for i in $(locate --regex "\/\.git\/|\/\.git$" | grep -vE "\/\.cache|\/\.cargo|\/\.local|^\/usr\/|yay|nvim\/bundle" | rev | cut -c5- | rev);
-    do
-        {
-            execf "$i" git config --get remote.origin.url | tr '\n' ' ';
-            printf %s "$i" | sed "s|$HOME|~|";
-            printf "\n";
-        }  >> "$HOME"/install/packages_git.txt;
-    done
-    sed -i '/^~/d' "$HOME"/install/packages_git.txt
-    cd "$HOME"/install && git add packages_git.txt
-    cd || exit 1
 }
 
 while true; do
